@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" fill="none">
+  <rect width="1200" height="800" rx="18" fill="#F5F7FA" />
+  <g transform="translate(80,80)">
+    <rect width="1040" height="640" rx="12" fill="#EDEFF3" />
+    <text x="520" y="330" text-anchor="middle" fill="#8B93A1" font-family="GT, sans-serif" font-size="36">Project Thumbnail</text>
+  </g>
+</svg>

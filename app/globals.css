@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Local fonts from reference site to better match design */
+@font-face {
+  font-family: 'Acorn';
+  src: url('/font/acorn.woff') format('woff');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'GT';
+  src: url('/font/gt.woff') format('woff');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-acorn: 'Acorn';
+  --font-gt: 'GT';
+}
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #EE9B00;
+  color: #1B2430;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.reveal {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Only apply reveal animation when JavaScript is active */
+.reveal.animate > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.animate > *.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Nav underline slide */
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  bottom: -6px;
+  height: 2px;
+  width: 60%;
+  background: #1B2430;
+  transform-origin: center;
+  transition: transform 220ms cubic-bezier(.2,.9,.2,1);
+}
+.nav-link:hover::after,
+.nav-link:focus::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Contact button micro interaction */
+.btn-contact {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+.btn-contact:active {
+  transform: translateY(1px) scale(0.997);
+}
+
+/* Project image zoom */
+.project-img {
+  transition: transform 420ms cubic-bezier(.2,.9,.2,1);
+}
+.group:hover .project-img {
+  transform: scale(1.06) translateY(-4px);
+}
+
+/* Typography tweaks to better match reference */
+.font-display {
+  letter-spacing: -0.02em;
+}
+h1.font-display { /* hero large tweaks */
+  line-height: 0.95;
+}
