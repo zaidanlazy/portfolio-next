@@ -4,66 +4,71 @@ import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 export default function Contact() {
   return (
-    <section id="kontak" className="max-w-[880px] mx-auto px-6 py-20">
+    <section id="kontak" className="mx-auto max-w-[980px] px-6 py-20 md:px-10 md:py-28">
       <Reveal>
-        <div className="bg-ink text-bg rounded-2xl px-6 md:px-16 py-14 text-center shadow-xl shadow-black/10">
-          <h2 className="font-display text-bg text-[30px] mb-3">
-            Mari Bekerja Sama
-          </h2>
-          <p className="text-[#C7D0DB] max-w-[460px] mx-auto mb-8 text-[15px] leading-relaxed">
-            Sedang mencari kandidat magang atau entry-level di bidang
-            software/web development? Saya siap berdiskusi lebih lanjut.
-          </p>
+        <div className="relative overflow-hidden rounded-[30px] border border-blue-200/20 bg-gradient-to-br from-[#11254a] via-[#0b1730] to-[#09101f] px-6 py-14 text-center shadow-[0_30px_90px_-40px_#3478f6] md:px-16">
+          <div className="absolute -right-20 -top-32 h-72 w-72 rounded-full bg-blue-500/20 blur-3xl" />
+          <div className="absolute -bottom-40 -left-16 h-72 w-72 rounded-full bg-cyan-400/10 blur-3xl" />
+          <div className="relative">
+            <span className="section-kicker">06 / Kontak</span>
+            <h2 className="mb-3 mt-3 font-display text-[30px] text-white md:text-4xl">
+              Mari mulai percakapan
+            </h2>
+            <p className="mx-auto mb-8 max-w-[460px] text-[14px] leading-relaxed text-blue-100/70 md:text-[15px]">
+              Sedang mencari kandidat magang atau entry-level di bidang
+              software/web development? Saya siap berdiskusi lebih lanjut.
+            </p>
 
-          <div className="flex justify-center gap-3.5 flex-wrap mb-8">
-            <a
-            href="mailto:emailkamu@contoh.com"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium bg-highlight text-ink hover:-translate-y-0.5 hover:shadow-lg transition-all"
-            >
-            <Mail size={16} />
-            Kirim Email
-            </a>
+            <div className="mb-8 flex flex-wrap justify-center gap-3.5">
+              <a
+                href="mailto:email@yza4058.com"
+                className="inline-flex items-center gap-2 rounded-full bg-blue-400 px-5 py-3 text-sm font-semibold text-[#07101f] transition-all hover:-translate-y-0.5 hover:bg-sky-300 hover:shadow-lg"
+              >
+                <Mail size={16} />
+                Kirim Email
+              </a>
 
-            <a
-            href="/cv.pdf"
-            download
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium border border-[#3A4759] text-bg hover:-translate-y-0.5 hover:bg-white/5 transition-all"
-            >
-            <Download size={16} />
-            Unduh CV
-            </a>
-          </div>
+              <a
+                href="/cv.pdf"
+                download
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:bg-white/10"
+              >
+                <Download size={16} />
+                Unduh CV
+              </a>
+            </div>
 
-          <div className="flex justify-center gap-6 text-[13px] font-mono text-inkFaint flex-wrap">
-            <a
-            href="https://www.linkedin.com/in/zaidan-maulana-alghifari-839270370/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-bg transition-colors"
-            >
-            <FaLinkedin size={15} />
-            LinkedIn
-            </a>
+            <div className="flex flex-wrap justify-center gap-6 font-mono text-[12px] text-blue-100/60">
+              <a
+                href="https://www.linkedin.com/in/zaidan-maulana-alghifari-839270370/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
+              >
+                <FaLinkedin size={15} />
+                LinkedIn
+              </a>
 
-            <a
-            href="https://github.com/zaidanlazy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-bg transition-colors"
-            >
-            <FaGithub size={15} />
-            GitHub
-            </a>
+              <a
+                href="https://github.com/zaidanlazy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
+              >
+                <FaGithub size={15} />
+                GitHub
+              </a>
 
-            <a
-            href="https://wa.me/6281352271226?text=Halo%20Zaidan%2C%20saya%20tertarik%20untuk%20berdiskusi%20mengenai%20posisi%20magang%2Fentry-level"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 hover:text-bg transition-colors"
-            >
-            <MessageCircle size={15} />
-            WhatsApp
-            </a>
+              <a
+                href="https://wa.me/6281352271226?text=Halo%20Zaidan%2C%20saya%20tertarik%20untuk%20berdiskusi%20mengenai%20posisi%20magang%2Fentry-level"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 transition-colors hover:text-white"
+              >
+                <MessageCircle size={15} />
+                WhatsApp
+              </a>
+            </div>
           </div>
         </div>
       </Reveal>

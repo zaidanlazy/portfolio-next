@@ -21,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PORTOFOLIO",
+  title: "Zaidan Maulana Alghifari | Portofolio",
   description:
     "Portofolio Zaidan, lulusan SMKN 1 Bontang jurusan RPL, mencari peluang magang & entry-level di bidang software/web development.",
 };

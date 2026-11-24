@@ -16,8 +16,8 @@ export default function Home() {
       <Projects />
       <Timeline />
       <Contact />
-      <footer className="text-center py-8 pb-12 text-[12.5px] text-inkFaint font-mono">
-        © 2026 Zaidan — Dibuat dengan Next.js &amp; Tailwind CSS
+      <footer className="border-t border-white/[0.06] px-6 py-8 pb-12 text-center font-mono text-[11px] text-inkFaint">
+        © 2026 Zaidan Maulana Alghifari — Dibuat dengan Next.js
       </footer>
     </main>
   );
