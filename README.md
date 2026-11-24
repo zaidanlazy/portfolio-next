@@ -49,24 +49,30 @@ components/
 - `components/Projects.tsx` — ganti data `[Nama Proyek Kedua]` & `[Nama Proyek Ketiga]` dengan proyek asli kamu, tambah link demo/repo
 - `components/Skills.tsx` — sesuaikan daftar bahasa/tools
 
-## Cara deploy biar bisa diakses orang lain (gratis)
+## Menjalankan dan deploy
 
-**Opsi termudah: Vercel** (pembuat Next.js, paling cocok buat project ini)
+### Menjalankan di komputer
 
-1. Buat akun di https://vercel.com (bisa langsung pakai akun GitHub)
-2. Upload folder project ini ke GitHub dulu:
-   ```
-   git init
-   git add .
-   git commit -m "Portofolio pertama"
-   ```
-   Buat repo baru di github.com, lalu:
-   ```
-   git remote add origin <link-repo-kamu>
-   git branch -M main
-   git push -u origin main
-   ```
-3. Di dashboard Vercel, klik **Add New Project** → pilih repo GitHub kamu → klik **Deploy**
-4. Tunggu 1-2 menit, Vercel kasih link publik (contoh: `zaidan-portofolio.vercel.app`) yang bisa langsung kamu bagikan
+Dari folder proyek, jalankan:
 
-Setiap kali kamu `git push` perubahan baru, Vercel otomatis build & update situsnya — jadi CSS/JS nggak akan pernah "hilang" karena semuanya diatur otomatis oleh build system Next.js.
+```bash
+npm install
+npm run dev
+```
+
+Buka `http://localhost:3000`. Server development akan memperbarui halaman setiap kali file disimpan.
+
+### Deploy ke Vercel
+
+Repo proyek ini sudah ada di GitHub: `zaidanlazy/portfolio-next`, pada branch `main`.
+
+- **Jika proyek Vercel lama sudah terhubung ke repo tersebut:** buka **Settings → Git**, pastikan repository yang terhubung benar dan **Production Branch** adalah `main`. Push baru ke `main` akan memicu deployment. Periksa tab **Deployments** untuk melihat status build.
+- **Jika belum terhubung:** di dashboard Vercel pilih **Add New → Project**, import `zaidanlazy/portfolio-next`, biarkan **Root Directory** di root repo (`./`) dan gunakan pengaturan Next.js yang terdeteksi otomatis, lalu pilih **Deploy**.
+
+Untuk memperbarui situs berikutnya, commit perubahan lalu push ke `main`:
+
+```bash
+git add .
+git commit -m "Perbarui portofolio"
+git push origin main
+```
