@@ -112,7 +112,7 @@ main {
 .lanyard-swing {
   position: relative;
   z-index: 1;
-  transform-origin: 50% -11rem;
+  transform-origin: 50% 50%;
   will-change: transform;
 }
 

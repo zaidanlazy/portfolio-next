@@ -16,12 +16,10 @@ type DragState = {
   pointerX: number;
   pointerY: number;
   start: TagMotion;
+  target: TagMotion;
+  followVelocity: TagVelocity;
   bounds: MotionBounds;
-  lastPointerX: number;
-  lastPointerY: number;
-  lastTime: number;
-  velocityX: number;
-  velocityY: number;
+  frameTime: number | null;
 };
 
 type MotionBounds = {
@@ -33,6 +31,33 @@ type MotionBounds = {
 
 const clamp = (value: number, min: number, max: number) =>
   Math.max(min, Math.min(max, value));
+
+const integrateMotion = (
+  current: TagMotion,
+  target: TagMotion,
+  velocity: TagVelocity,
+  stiffness: number,
+  damping: number,
+  deltaTime: number,
+) => {
+  const steps = Math.max(1, Math.ceil(deltaTime / 8));
+  const stepTime = deltaTime / steps;
+  const next = { ...current };
+
+  for (let step = 0; step < steps; step += 1) {
+    velocity.x += ((target.x - next.x) * stiffness - velocity.x * damping) * stepTime;
+    velocity.y += ((target.y - next.y) * stiffness - velocity.y * damping) * stepTime;
+    velocity.rotation +=
+      ((target.rotation - next.rotation) * stiffness -
+        velocity.rotation * damping) *
+      stepTime;
+    next.x += velocity.x * stepTime;
+    next.y += velocity.y * stepTime;
+    next.rotation += velocity.rotation * stepTime;
+  }
+
+  return next;
+};
 
 export default function Hero() {
   const [isDragging, setIsDragging] = useState(false);
@@ -50,9 +75,12 @@ export default function Hero() {
     }
     if (lanyardPathRef.current && lanyardHighlightRef.current) {
       const pivotX = (lanyardPathRef.current.ownerSVGElement?.clientWidth ?? 224) / 2;
+      const cardHeight = swingRef.current?.offsetHeight ?? 354;
+      const clipOffsetY = 5.6 - cardHeight / 2;
       const rotation = (motion.rotation * Math.PI) / 180;
-      const horizontalDistance = motion.x - Math.sin(rotation) * 181.6;
-      const verticalDistance = motion.y + Math.cos(rotation) * 181.6;
+      const horizontalDistance = motion.x - Math.sin(rotation) * clipOffsetY;
+      const verticalDistance =
+        176 + motion.y + cardHeight / 2 + Math.cos(rotation) * clipOffsetY;
       const distance = Math.max(1, Math.hypot(horizontalDistance, verticalDistance));
       const slack = clamp(10 + (181.6 - distance) * 0.08, 2, 18);
       const normalX = -verticalDistance / distance;
@@ -75,6 +103,45 @@ export default function Hero() {
     }
   };
 
+  const followDrag = (time: number) => {
+    const drag = dragRef.current;
+    if (!drag) {
+      animationFrameRef.current = null;
+      return;
+    }
+
+    const deltaTime = Math.min(drag.frameTime === null ? 16 : time - drag.frameTime, 24);
+    drag.frameTime = time;
+    const stiffness = 0.0032;
+    const damping = 0.12;
+    const next = integrateMotion(
+      motionRef.current,
+      drag.target,
+      drag.followVelocity,
+      stiffness,
+      damping,
+      deltaTime,
+    );
+    applyMotion(next);
+
+    const settled =
+      Math.abs(drag.target.x - next.x) < 0.25 &&
+      Math.abs(drag.target.y - next.y) < 0.25 &&
+      Math.abs(drag.target.rotation - next.rotation) < 0.25 &&
+      Math.abs(drag.followVelocity.x) < 0.02 &&
+      Math.abs(drag.followVelocity.y) < 0.02 &&
+      Math.abs(drag.followVelocity.rotation) < 0.02;
+
+    if (settled) {
+      applyMotion(drag.target);
+      drag.followVelocity = { x: 0, y: 0, rotation: 0 };
+      animationFrameRef.current = null;
+      return;
+    }
+
+    animationFrameRef.current = requestAnimationFrame(followDrag);
+  };
+
   const animateTo = (target: TagMotion, initialVelocity: TagVelocity = { x: 0, y: 0, rotation: 0 }) => {
     stopAnimation();
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -88,20 +155,17 @@ export default function Hero() {
     const animate = (time: number) => {
       const deltaTime = Math.min(lastTime === null ? 16 : time - lastTime, 32);
       lastTime = time;
-      const current = motionRef.current;
       const stiffness = 0.00055;
       const damping = 0.07;
 
-      velocity.x += ((target.x - current.x) * stiffness - velocity.x * damping) * deltaTime;
-      velocity.y += ((target.y - current.y) * stiffness - velocity.y * damping) * deltaTime;
-      velocity.rotation +=
-        ((target.rotation - current.rotation) * stiffness - velocity.rotation * damping) * deltaTime;
-
-      const next = {
-        x: current.x + velocity.x * deltaTime,
-        y: current.y + velocity.y * deltaTime,
-        rotation: current.rotation + velocity.rotation * deltaTime,
-      };
+      const next = integrateMotion(
+        motionRef.current,
+        target,
+        velocity,
+        stiffness,
+        damping,
+        deltaTime,
+      );
       applyMotion(next);
 
       const settled =
@@ -153,12 +217,10 @@ export default function Hero() {
       pointerX: event.clientX,
       pointerY: event.clientY,
       start: motionRef.current,
+      target: motionRef.current,
+      followVelocity: { x: 0, y: 0, rotation: 0 },
       bounds,
-      lastPointerX: event.clientX,
-      lastPointerY: event.clientY,
-      lastTime: event.timeStamp,
-      velocityX: 0,
-      velocityY: 0,
+      frameTime: null,
     };
     setIsDragging(true);
   };
@@ -167,33 +229,36 @@ export default function Hero() {
     const drag = dragRef.current;
     if (!drag) return;
 
-    const elapsed = Math.max(1, event.timeStamp - drag.lastTime);
-    drag.velocityX = (event.clientX - drag.lastPointerX) / elapsed;
-    drag.velocityY = (event.clientY - drag.lastPointerY) / elapsed;
-    drag.lastPointerX = event.clientX;
-    drag.lastPointerY = event.clientY;
-    drag.lastTime = event.timeStamp;
-
     const deltaX = event.clientX - drag.pointerX;
     const deltaY = event.clientY - drag.pointerY;
-    applyMotion({
+    drag.target = {
       x: clamp(drag.start.x + deltaX, drag.bounds.minX, drag.bounds.maxX),
       y: clamp(drag.start.y + deltaY, drag.bounds.minY, drag.bounds.maxY),
-      rotation: clamp(drag.start.rotation + deltaX * 0.14, -28, 28),
-    });
+      rotation: clamp(drag.start.rotation + deltaX * 0.18, -45, 45),
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      applyMotion(drag.target);
+      return;
+    }
+
+    if (animationFrameRef.current === null) {
+      animationFrameRef.current = requestAnimationFrame(followDrag);
+    }
   };
 
   const releaseTag = () => {
     const drag = dragRef.current;
     if (!drag) return;
+    stopAnimation();
     dragRef.current = null;
     setIsDragging(false);
     animateTo(
       { x: 0, y: 0, rotation: 0 },
       {
-        x: clamp(drag.velocityX * 0.08, -0.25, 0.25),
-        y: clamp(drag.velocityY * 0.08, -0.25, 0.25),
-        rotation: clamp(drag.velocityX * 0.015, -0.04, 0.04),
+        x: clamp(drag.followVelocity.x * 0.04, -0.2, 0.2),
+        y: clamp(drag.followVelocity.y * 0.04, -0.2, 0.2),
+        rotation: clamp(drag.followVelocity.rotation * 0.04, -0.05, 0.05),
       },
     );
   };
@@ -224,7 +289,7 @@ export default function Hero() {
     animateTo({
       x: clamp(current.x + delta.x, bounds.minX, bounds.maxX),
       y: clamp(current.y + delta.y, bounds.minY, bounds.maxY),
-      rotation: clamp(current.rotation + delta.rotation, -28, 28),
+      rotation: clamp(current.rotation + delta.rotation, -45, 45),
     });
   };
 
