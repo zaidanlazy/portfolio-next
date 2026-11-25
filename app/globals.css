@@ -21,6 +21,9 @@
 :root {
   --font-acorn: "Acorn";
   --font-gt: "GT";
+  --font-space-grotesk: Arial, sans-serif;
+  --font-inter: Arial, sans-serif;
+  --font-jetbrains: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   color-scheme: dark;
 }
 
