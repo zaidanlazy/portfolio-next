@@ -1,5 +1,5 @@
 import Reveal from "./Reveal";
-import { MessageCircle, Mail, Download } from "lucide-react";
+import { MessageCircle, Mail, Eye } from "lucide-react";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 
 export default function Contact() {
@@ -30,11 +30,12 @@ export default function Contact() {
 
               <a
                 href="/cv.pdf"
-                download
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:bg-white/10"
               >
-                <Download size={16} />
-                Unduh CV
+                <Eye size={16} />
+                Lihat CV
               </a>
             </div>
 
